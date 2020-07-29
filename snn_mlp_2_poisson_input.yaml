@@ -1,0 +1,100 @@
+
+experiment_name:
+  snn_mlp_2_poisson_input
+
+pytorch_seed:
+  2
+
+hyperparameters:
+  # default parameters
+  length:
+    25
+  batch_size:
+    64
+  epoch:
+    100
+  droupout:
+    0.3
+  tau_m:
+    4
+  filter_tau_m:
+    4
+  filter_tau_s:
+    1
+  train_coefficients:
+    True
+  train_bias:
+    True
+  membrane_filer:
+    False
+
+optimizer:
+  optimizer_choice:
+    'Adam'
+  Adam:
+    lr: 0.0001
+  AdamW:
+    lr: 0.0001
+  SGD:
+    lr: 0.0001
+
+scheduler:
+  scheduler_choice:
+    'MultiStepLR'
+  MultiStepLR:
+    milestones:
+      - 50
+      - 100
+    gamma:
+      0.1
+  CosineAnnealingWarmRestarts:
+    T_0:
+      1000
+  CyclicLR:
+    base_lr:
+      0.0001
+    max_lr:
+      0.001
+    step_size_up:
+      2000
+
+transform:
+  RandomResizedCrop:
+    size:
+      28
+    scale:
+      - 0.85
+      - 1.0
+    ratio:
+      - 0.75
+      - 1.3333333333333333
+    interpolation:
+      2
+  RandomRotation:
+    angle:
+      15
+  RandomApply:
+    probability:
+      0.5
+
+mnist_config:
+  max_rate:
+    1
+  use_transform:
+    True
+
+# configs for saving checkpoint
+save_checkpoint:
+  True
+checkpoint_base_name:
+  checkpoint_
+checkpoint_base_path:
+  ./checkpoint/
+
+# the checkpoint used for test
+test_checkpoint_path:
+  ./checkpoint/pretrained_snn_mlp_2_poisson_input
+
+acc_file_name:
+  'snn_mlp_acc.csv'
+

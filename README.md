@@ -47,11 +47,18 @@ omegaconf==1.4.1
 ## Citation
 If this is helpful for you, please cite the following paper:
 ```
-@inproceedings{fang2020exploiting,
-	title="Exploiting Neuron and Synapse Filter Dynamics in Spatial Temporal Learning of Deep Spiking Neural Network",
-	author="Haowen {Fang} and Amar {Shrestha} and Ziyi {Zhao} and Qinru {Qiu}",
-	booktitle="IJCAI 2020: International Joint Conference on Artificial Intelligence",
-	notes="Sourced from Microsoft Academic - https://academic.microsoft.com/paper/3034923703",
-	year="2020"
+@inproceedings{ijcai2020-0388,
+  title     = {Exploiting Neuron and Synapse Filter Dynamics in Spatial Temporal Learning of Deep Spiking Neural Network},
+  author    = {Fang, Haowen and Shrestha, Amar and Zhao, Ziyi and Qiu, Qinru},
+  booktitle = {Proceedings of the Twenty-Ninth International Joint Conference on
+               Artificial Intelligence, {IJCAI-20}},
+  publisher = {International Joint Conferences on Artificial Intelligence Organization},             
+  editor    = {Christian Bessiere}	
+  pages     = {2799--2806},
+  year      = {2020},
+  month     = {7},
+  note      = {Main track}
+  doi       = {10.24963/ijcai.2020/388},
+  url       = {https://doi.org/10.24963/ijcai.2020/388},
 }
 ```

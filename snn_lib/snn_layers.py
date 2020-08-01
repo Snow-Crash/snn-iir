@@ -768,7 +768,7 @@ class neuron_cell(torch.nn.Module):
         self.reset_decay = torch.nn.Parameter(torch.full((self.neuron_number,),self.reset_decay))
         self.reset_decay.requires_grad = False
 
-        self.reset_v = torch.nn.Parameter(torch.full((self.neuron_number,), 1.0))
+        self.reset_v = torch.nn.Parameter(torch.full((self.neuron_number,), reset_v))
         self.reset_v.requires_grad = False
 
         self.decay_v = torch.exp(torch.tensor(-1/tau_m))
@@ -1281,7 +1281,7 @@ class SNN_Monitor():
 
         self.spike_list.append(output[0])
         self.v_list.append(output[1][0])
-        self.reset_v_list.append(output[0][1])
+        self.reset_v_list.append(output[1][1])
 
         if self.counter == self.max_len:
             self.reshape()

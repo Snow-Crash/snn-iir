@@ -734,7 +734,7 @@ class axon_layer(torch.nn.Module):
 
 class neuron_cell(torch.nn.Module):
     def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
-                train_bias, membrane_filter, input_type='axon'):
+                train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
 
         :param input_size: int
@@ -807,7 +807,7 @@ class neuron_cell(torch.nn.Module):
 
 class neuron_layer(torch.nn.Module):
     def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
-    train_bias, membrane_filter, input_type='axon'):
+    train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
 
         :param input_size:
@@ -828,7 +828,7 @@ class neuron_layer(torch.nn.Module):
         self.input_type = input_type
 
         self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m, 
-                                        train_bias, membrane_filter, input_type)
+                                        train_bias, membrane_filter, input_type, reset_v)
 
     def forward(self, input_spikes, states):
         """

@@ -1184,3 +1184,138 @@ def calculate_maxpooling2d_outsize(h_input, w_input, padding, kernel_size, strid
     w_output = (w_input + 2*padding - dilation*(kernel_size-1) - 1)//stride + 1
 
     return h_output, w_output
+
+
+class SNN_Monitor():
+    """
+    Record spikes and states
+    reference: https://www.kaggle.com/sironghuang/understanding-pytorch-hooks
+    """
+    def __init__(self, module, max_iteration = 1):
+
+        self.step_num = module.step_num
+        self.max_iteration = max_iteration
+
+        self.variable_dict = {}
+        self.record = {}
+
+        self.counter  = 0
+        self.max_len = max_iteration * self.step_num
+
+        if isinstance(module, dual_exp_iir_layer):
+            self.psp_list = []
+            self.hook = module.dual_exp_iir_cell.register_forward_hook(self.get_output_dual_exp_iir)
+
+            self.variable_dict['psp'] = self.psp_list
+
+        elif isinstance(module, first_order_low_pass_layer):
+            self.psp_list = []
+            self.hook = module.first_order_low_pass_cell.register_forward_hook(self.get_output_first_order_low_pass)
+
+            self.variable_dict['psp'] = self.psp_list
+
+        elif isinstance(module, neuron_layer):
+            self.hook = module.neuron_cell.register_forward_hook(self.get_output_neuron_layer)
+            self.v_list = []
+            self.reset_v_list = []
+            self.spike_list = []
+
+            self.variable_dict['v'] = self.v_list
+            self.variable_dict['reset_v'] = self.reset_v_list
+            self.variable_dict['spike'] = self.spike_list
+
+        elif isinstance(module, axon_layer):
+            self.hook =module.axon_cell.register_forward_hook(self.get_output_axon_layer)
+            self.psp_list = []
+
+            self.variable_dict['psp'] = self.psp_list
+
+    def get_output_dual_exp_iir(self, module, input, output):
+        '''
+
+        :param module:
+        :param input: a tuple [spike, new state[state(t-1), state(t-2)]]
+        :param output: a tuple [psp, new state[psp, state(t-1)]]
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_first_order_low_pass(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output:
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_neuron_layer(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output: [spike, [v, reset_v]]
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.spike_list.append(output[0])
+        self.v_list.append(output[1][0])
+        self.reset_v_list.append(output[0][1])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_axon_layer(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output:
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def reshape(self):
+
+        for key in self.variable_dict:
+            temp_list = []
+            for element in self.variable_dict[key]:
+                temp_list.append(element.detach().cpu().numpy())
+
+            # shape packed [total steps, batch, neuron/synapse]
+            packed = np.array(temp_list)
+
+            #shape packed [iterations,step num, batch, neuron/synapse]
+            packed = np.reshape(packed, (self.max_iteration, self.step_num, *packed.shape[1:]))
+
+            self.record[key] = packed
+            

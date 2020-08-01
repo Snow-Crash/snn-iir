@@ -540,7 +540,7 @@ class dual_exp_iir_layer(torch.nn.Module):
 
         return init_states
 
-class firsr_order_low_pass_cell(torch.nn.Module):
+class first_order_low_pass_cell(torch.nn.Module):
     '''
     implement first order low pass filter
     '''
@@ -578,7 +578,7 @@ class firsr_order_low_pass_cell(torch.nn.Module):
 
         return psp, new_states
 
-class firsr_order_low_pass_layer(torch.nn.Module):
+class first_order_low_pass_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau, train_coefficients):
         '''
         :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
@@ -592,7 +592,7 @@ class firsr_order_low_pass_layer(torch.nn.Module):
         self.batch_size = batch_size
         self.tau = tau
 
-        self.firsr_order_low_pass_cell = firsr_order_low_pass_cell(input_shape, step_num, batch_size, tau,
+        self.first_order_low_pass_cell = first_order_low_pass_cell(input_shape, step_num, batch_size, tau,
                                                     train_coefficients)
 
     def forward(self, input_spikes, states):
@@ -608,12 +608,12 @@ class firsr_order_low_pass_layer(torch.nn.Module):
         length = len(inputs)
 
         for i in range(length):
-            spike, states = self.firsr_order_low_pass_cell(inputs[i], states)
+            spike, states = self.first_order_low_pass_cell(inputs[i], states)
             spikes += [spike]
         return torch.stack(spikes, dim=-1), states
 
     def create_init_states(self):
-        device = self.firsr_order_low_pass_cell.alpha_1.device
+        device = self.first_order_low_pass_cell.alpha_1.device
         prev_t_1 = torch.zeros(self.input_shape).to(device)
 
         init_states = prev_t_1

@@ -35,7 +35,7 @@ for file in os.listdir(png_folder):
 
 #read png file
 np_image_list = []
-resized_imgge_list = []
+resized_image_list = []
 for png_file in png_list:
     img = Image.open(png_file).resize((width,hight))
     np_img = np.array(img)
@@ -44,15 +44,15 @@ for png_file in png_list:
 
     #some image has 3 channels, slect the last channel, which is the alpha channel
     if len(np_img.shape) == 3:
-        resized_imgge_list.append(np_img[:,:,3])
+        resized_image_list.append(np_img[:,:,3])
     elif len(np_img.shape) == 2:
-        resized_imgge_list.append(np_img)
+        resized_image_list.append(np_img)
     else:
         print('image file channel exception', png_file, np_img.shape)
 
 #binarize image
 binary_img_list = []
-for img in resized_imgge_list:
+for img in resized_image_list:
     max_val = np.max(img)
     #normalize to [0,1]
     img = img/max_val
@@ -149,14 +149,14 @@ elif mask_choice == 4:
 plt.imshow(mask)
 
 # %%
-dialated_img_list = []
+dilated_img_list = []
 for img in binary_img_list:
     img = img * mask
-    dialated_img_list.append(img)
+    dilated_img_list.append(img)
 
-plt.imshow(dialated_img_list[0])
+plt.imshow(dilated_img_list[0])
 
-dialated_img_mat = np.array(dialated_img_list).astype(np.float32)
+dilated_img_mat = np.array(dilated_img_list).astype(np.float32)
 
 if save:
-    np.save('associative_target', dialated_img_mat)
+    np.save('associative_target', dilated_img_mat)

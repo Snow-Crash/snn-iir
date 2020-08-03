@@ -58,7 +58,7 @@ class threshold_layer(torch.nn.Module):
 
 class filter_layer(torch.nn.Module):
     '''
-    implement dual exponentual filter.
+    implement dual exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, filter_tau_m, filter_tau_s, device=None):
@@ -105,7 +105,7 @@ class filter_layer(torch.nn.Module):
 
 class exponential_filter_layer(torch.nn.Module):
     '''
-    implement exponential exponentual filter.
+    implement exponential exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, alpha, device):
@@ -141,9 +141,9 @@ class exponential_filter_layer(torch.nn.Module):
         return torch.stack(filter_output_list,dim=-1)
 
 
-class doouble_exponential_filter_layer(torch.nn.Module):
+class double_exponential_filter_layer(torch.nn.Module):
     '''
-    implement exponential exponentual filter.
+    implement exponential exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, alpha, beta, device):
@@ -335,7 +335,7 @@ class synapse_cell(torch.nn.Module):
     '''
     def __init__(self, input_size, output_size, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -446,7 +446,7 @@ class dual_exp_iir_cell(torch.nn.Module):
     '''
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_coefficients):
         '''
-        :param input_shape: tuple (width, hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width, hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -495,7 +495,7 @@ class dual_exp_iir_cell(torch.nn.Module):
 class dual_exp_iir_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -546,7 +546,7 @@ class first_order_low_pass_cell(torch.nn.Module):
     '''
     def __init__(self, input_shape, step_num, batch_size, tau, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -581,7 +581,7 @@ class first_order_low_pass_cell(torch.nn.Module):
 class first_order_low_pass_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -626,7 +626,7 @@ class axon_cell(torch.nn.Module):
     '''
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -678,7 +678,7 @@ class axon_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
 
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -833,7 +833,7 @@ class neuron_layer(torch.nn.Module):
     def forward(self, input_spikes, states):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
-        :param  prev_states: tuple (prev_psp_m, prev_psp_s)
+        :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
 
@@ -968,7 +968,7 @@ class neuron_layer_dot_product(torch.nn.Module):
     def forward(self, input_spikes, states):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
-        :param  prev_states: tuple (prev_psp_m, prev_psp_s)
+        :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
 

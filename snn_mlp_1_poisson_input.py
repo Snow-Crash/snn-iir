@@ -81,7 +81,7 @@ filter_tau_s = hyperparam_conf['filter_tau_s']
 
 membrane_filter = hyperparam_conf['membrane_filter']
 
-train_bias = hyperparam_conf['filter_tau_m']
+train_bias = hyperparam_conf['train_bias']
 train_coefficients = hyperparam_conf['train_coefficients']
 
 # %% mnist config

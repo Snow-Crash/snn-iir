@@ -733,10 +733,9 @@ class axon_layer(torch.nn.Module):
 
 
 class neuron_cell(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
                 train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
-
         :param input_size: int
         :param step_num:
         :param batch_size:
@@ -806,10 +805,9 @@ class neuron_cell(torch.nn.Module):
         return spike, new_states
 
 class neuron_layer(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
     train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
-
         :param input_size:
         :param neuron_number:
         :param step_num:
@@ -827,7 +825,7 @@ class neuron_layer(torch.nn.Module):
         self.membrane_filter = membrane_filter
         self.input_type = input_type
 
-        self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m, 
+        self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m,
                                         train_bias, membrane_filter, input_type, reset_v)
 
     def forward(self, input_spikes, states):
@@ -863,7 +861,7 @@ class neuron_layer(torch.nn.Module):
             yield name, param
 
 class neuron_cell_dot_product(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
                 train_bias, membrane_filter, input_type='axon'):
         '''
         The the neuron performs dot product with input, not vector-matrix multiplication
@@ -940,7 +938,7 @@ class neuron_cell_dot_product(torch.nn.Module):
         return spike, new_states
 
 class neuron_layer_dot_product(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
                 train_bias, membrane_filter, input_type='axon'):
         '''
 
@@ -961,7 +959,7 @@ class neuron_layer_dot_product(torch.nn.Module):
         self.membrane_filter = membrane_filter
         self.input_type = input_type
 
-        self.neuron_cell = neuron_cell_dot_product(input_size, neuron_number, step_num, batch_size, tau_m, 
+        self.neuron_cell = neuron_cell_dot_product(input_size, neuron_number, step_num, batch_size, tau_m,
                             train_bias, membrane_filter, input_type)
 
 
@@ -1318,4 +1316,3 @@ class SNN_Monitor():
             packed = np.reshape(packed, (self.max_iteration, self.step_num, *packed.shape[1:]))
 
             self.record[key] = packed
-            

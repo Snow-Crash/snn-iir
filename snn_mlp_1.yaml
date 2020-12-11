@@ -29,7 +29,7 @@ hyperparameters:
     True
   train_bias:
     True
-  membrane_filer:
+  membrane_filter:
     False
 
 optimizer:

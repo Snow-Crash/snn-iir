@@ -42,7 +42,7 @@ for png_file in png_list:
     np_image_list.append(np_img)
     print(png_file, np_img.shape)
 
-    #some image has 3 channels, slect the last channel, which is the alpha channel
+    #some image has 3 channels, select the last channel, which is the alpha channel
     if len(np_img.shape) == 3:
         resized_image_list.append(np_img[:,:,3])
     elif len(np_img.shape) == 2:

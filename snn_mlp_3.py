@@ -39,7 +39,7 @@ else:
 # arg parser
 parser = argparse.ArgumentParser(description='mlp snn')
 parser.add_argument('--config_file', type=str, default='snn_mlp_3.yaml',
-                    help='path to cinfiguration file')
+                    help='path to configuration file')
 parser.add_argument('--train', action='store_true',
                     help='train model')
 
@@ -114,13 +114,13 @@ class mysnn(torch.nn.Module):
         self.train_bias = train_bias
         self.membrane_filter = membrane_filter
 
-        self.axon1 = firsr_order_low_pass_layer((784,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon1 = first_order_low_pass_layer((784,), self.length, self.batch_size, tau_m, train_coefficients)
         self.snn1 = neuron_layer(784, 500, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter, reset_v=reset_v)
 
-        self.axon2 = firsr_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon2 = first_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
         self.snn2 = neuron_layer(500, 500, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter, reset_v=reset_v)
 
-        self.axon3 = firsr_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon3 = first_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
         self.snn3 = neuron_layer(500, 10, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter, reset_v=reset_v)
 
         self.dropout1 = torch.nn.Dropout(p=0.3, inplace=False)

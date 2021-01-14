@@ -197,7 +197,7 @@ class double_exponential_filter_layer(torch.nn.Module):
 
 class snn_cell(torch.nn.Module):
     '''
-    Implement the functionalty of spiking neuron.
+    Implement the functionality of spiking neuron.
     It times the psp with weight and calculate voltage.
     Forward function only calculate one step
     '''
@@ -391,7 +391,7 @@ class synapse_cell(torch.nn.Module):
 
 class synapse_layer(torch.nn.Module):
     '''
-    wraper of synapse cell
+    wrapper of synapse cell
     '''
     def __init__(self, input_size, output_size, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''

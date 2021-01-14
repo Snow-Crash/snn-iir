@@ -3,7 +3,7 @@ This repo contains the implementation of paper [Exploiting Neuron and Synapse Fi
 
 ## Run
 
-Just simply clone the repo. A few examples are provided:
+Just simply clone the repo. A few examples are provided in **examples** folder:
 - snn_mlp_1.py  
 A multi-layer fully connected SNN to classify MNIST. It uses dual exponential PSP kernel.  
 Following command trains the SNN using the configurations stored in snn_mlp_1.yaml
@@ -28,14 +28,16 @@ Following command loads the pretrained model and test it.
 ```
 
 - associative_memory.py  
-A multi-layer fully connected SNN which reconstructs input patterns at output layer. A pretrained model locates in ./associative_memory_checkpoint/pretrained_associative_memory. 
+A multi-layer fully connected SNN which reconstructs input patterns at output layer. A pretrained model locates in ./checkpoint/pretrained_associative_memory. 
 associative_memory.ipynb is the notebook version to inspect input and output.  
 
 ## File Organization
 - snn_lib: Spiking neural network layers, data loaders,utility functions etc.
 - checkpoint: pretrained models.
-- dataset: data used for associative memory experiments.
-- associative_memory_checkpoint: pre-trained model of associative_memory.py.
+- examples: example models and checkpoints
+- examples/dataset: data used for associative memory experiments.
+- examples/checkpoint: pre-trained model of associative_memory.py.
+- run.sh: docker created by [DenDen047](https://github.com/DenDen047). Thanks!
 
 ## Dependencies
 ```

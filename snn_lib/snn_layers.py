@@ -1327,7 +1327,9 @@ class SNN_Monitor():
             self.reshape()
 
     def reshape(self):
-
+        '''
+        change record axis order to [iterations, batch, neuron/synapse, step num]
+        '''
         for key in self.variable_dict:
             temp_list = []
             for element in self.variable_dict[key]:
@@ -1338,5 +1340,8 @@ class SNN_Monitor():
 
             #shape packed [iterations,step num, batch, neuron/synapse]
             packed = np.reshape(packed, (self.max_iteration, self.step_num, *packed.shape[1:]))
-
+            #shape packed [iterations, batch, step num, neuron/synapse]
+            packed = packed.swapaxes(1,2)
+            # #shape packed [iterations, batch, neuron/synapse, step num]
+            packed = packed.swapaxes(2,3)
             self.record[key] = packed

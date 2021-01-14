@@ -247,29 +247,18 @@ class mysnn(torch.nn.Module):
         :param inputs: [batch, input_size, t]
         :return:
         """
-        axon1_states = self.axon1.create_init_states()
-        dense1_states = self.dense1.create_init_states()
 
-        axon2_states = self.axon2.create_init_states()
-        dense2_states = self.dense2.create_init_states()
+        axon1_out, _ = self.axon1(inputs)
+        spike_dense1, _ = self.dense1(axon1_out)
 
-        axon3_states = self.axon3.create_init_states()
-        dense3_states = self.dense3.create_init_states()
+        axon2_out, _ = self.axon2(spike_dense1)
+        spike_dense2, _ = self.dense2(axon2_out)
 
-        axon4_states = self.axon4.create_init_states()
-        dense4_states = self.dense4.create_init_states()
+        axon3_out, _ = self.axon3(spike_dense2)
+        spike_dense3, _ = self.dense3(axon3_out)
 
-        axon1_out, axon1_states = self.axon1(inputs, axon1_states)
-        spike_dense1, dense1_states = self.dense1(axon1_out, dense1_states)
-
-        axon2_out, axon2_states = self.axon2(spike_dense1, axon2_states)
-        spike_dense2, dense2_states = self.dense2(axon2_out, dense2_states)
-
-        axon3_out, axon3_states = self.axon3(spike_dense2, axon3_states)
-        spike_dense3, dense3_states = self.dense3(axon3_out, dense3_states)
-
-        axon4_out, axon4_states = self.axon4(spike_dense3, axon4_states)
-        spike_dense4, dense4_states = self.dense4(axon4_out, dense4_states)
+        axon4_out, _ = self.axon4(spike_dense3)
+        spike_dense4, _ = self.dense4(axon4_out)
 
         filtered_output = self.output_filter(spike_dense4)
 

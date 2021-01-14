@@ -19,6 +19,7 @@ from torchvision import datasets
 import sys
 import os
 
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 import snn_lib.utilities as utilities
 from snn_lib.snn_layers import *
 

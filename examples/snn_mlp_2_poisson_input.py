@@ -25,6 +25,7 @@ from torch.utils.tensorboard import SummaryWriter
 from torchvision import datasets
 from torchvision import transforms, utils
 
+sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from snn_lib.snn_layers import *
 from snn_lib.optimizers import *
 from snn_lib.schedulers import *

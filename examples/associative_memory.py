@@ -29,7 +29,7 @@ import argparse
 dataset_path = './dataset/associative_target.npy'
 
 checkpoint_base_name = "associative_memory_checkpoint_"
-checkpoint_base_path = './associative_memory_checkpoint/'
+checkpoint_base_path = './checkpoint/'
 
 torch.manual_seed(2)
 np.random.seed(0)

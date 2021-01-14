@@ -1,6 +1,7 @@
 *.gz
 *.pyc
 runs/*
+*/runs
 *idx3-ubyte
 *idx1-ubyte
 *.pt

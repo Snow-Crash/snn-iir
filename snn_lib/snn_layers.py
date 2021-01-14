@@ -288,7 +288,7 @@ class snn_layer(torch.nn.Module):
                  train_tau_s)
 
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         # type: (Tensor, Tuple[Tensor, Tensor, Tensor, Tensor]) -> Tuple[Tensor, Tuple[Tensor, Tensor, Tensor, Tensor]]
         """
         :param input_spikes: [batch, input_size, t]
@@ -299,6 +299,9 @@ class snn_layer(torch.nn.Module):
                 prev_psp_s[batch, input_size]
         :return: spikes[neuron_number, length], [states0, state1...]
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)
@@ -415,12 +418,15 @@ class synapse_layer(torch.nn.Module):
 
         self.synapse_cell = synapse_cell(input_size, output_size, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param input_spikes: [batch, dim0 ,dim1.., t]
         :param  states: tuple (prev_psp_m, prev_psp_s)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)
@@ -513,12 +519,15 @@ class dual_exp_iir_layer(torch.nn.Module):
 
         self.dual_exp_iir_cell = dual_exp_iir_cell(input_shape, step_num, batch_size, tau_m, tau_s, train_coefficients)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param current_spike: [batch, dim0 ,dim1..]
         :param  states: tuple (prev_t_1, prev_t_2)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = list(input_spikes.unbind(dim=-1))
@@ -595,12 +604,15 @@ class first_order_low_pass_layer(torch.nn.Module):
         self.first_order_low_pass_cell = first_order_low_pass_cell(input_shape, step_num, batch_size, tau,
                                                     train_coefficients)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param current_spike: [batch, dim0 ,dim1..]
         :param  states: prev_psp
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = list(input_spikes.unbind(dim=-1))
@@ -697,12 +709,15 @@ class axon_layer(torch.nn.Module):
 
         self.axon_cell = axon_cell(input_shape, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param current_spike: [batch, dim0 ,dim1..]
         :param  states: tuple (prev_psp_m, prev_psp_s)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)
@@ -828,12 +843,15 @@ class neuron_layer(torch.nn.Module):
         self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m,
                                         train_bias, membrane_filter, input_type, reset_v)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
         :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)
@@ -963,12 +981,15 @@ class neuron_layer_dot_product(torch.nn.Module):
                             train_bias, membrane_filter, input_type)
 
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
         :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)
@@ -1083,12 +1104,15 @@ class conv2d_layer(torch.nn.Module):
         self.conv2d_cell = conv2d_cell(h_input, w_input, in_channels, out_channels, kernel_size, stride, padding, dilation, step_num, batch_size,
                  tau_m, train_bias, membrane_filter, input_type)
 
-    def forward(self, input_spikes, states):
+    def forward(self, input_spikes, states=None):
         """
         :param input_spikes: [batch, dim0 ,dim1..,t]
         :param  prev_states: tuple (prev_psp_m, prev_psp_s)
         :return:
         """
+
+        if states is None:
+            states = self.create_init_states()
 
         # unbind along last dimension
         inputs = input_spikes.unbind(dim=-1)

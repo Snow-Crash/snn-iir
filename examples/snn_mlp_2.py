@@ -8,7 +8,6 @@
 """
 
 import argparse
-import pandas as pd
 import os
 import time
 import sys
@@ -17,7 +16,6 @@ import torch
 import numpy as np
 import random
 from torch.utils.data import Dataset, DataLoader
-from torch.utils.tensorboard import SummaryWriter
 from torchvision import datasets
 from torchvision import transforms, utils
 
@@ -98,9 +96,6 @@ mnist_trainset = datasets.MNIST(root='./data', train=True, download=True, transf
 
 # load mnist test dataset
 mnist_testset = datasets.MNIST(root='./data', train=False, download=True, transform=None)
-
-# acc file name
-acc_file_name = experiment_name + '_' + conf['acc_file_name']
 
 # %% define model
 class mysnn(torch.nn.Module):
@@ -235,8 +230,6 @@ if __name__ == "__main__":
 
     snn = mysnn().to(device)
 
-    writer = SummaryWriter()
-
     params = list(snn.parameters())
 
     optimizer = get_optimizer(params, conf)
@@ -289,10 +282,6 @@ if __name__ == "__main__":
         # save result and get best epoch
         train_acc_list = np.array(train_acc_list)
         test_acc_list = np.array(test_acc_list)
-
-        acc_df = pd.DataFrame(data={'train_acc': train_acc_list, 'test_acc': test_acc_list})
-
-        acc_df.to_csv(acc_file_name)
 
         best_train_acc = np.max(train_acc_list)
         best_train_epoch = np.argmax(test_acc_list)

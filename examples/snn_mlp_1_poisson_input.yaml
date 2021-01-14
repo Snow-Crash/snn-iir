@@ -99,6 +99,4 @@ checkpoint_base_path:
 test_checkpoint_path:
   ./checkpoint/pretrained_snn_mlp_1_poisson_input
 
-acc_file_name:
-  'snn_mlp_acc.csv'
 

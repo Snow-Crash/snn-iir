@@ -100,6 +100,4 @@ test_checkpoint_path:
   ./checkpoint/checkpoint_snn_mlp_1_99_20201028-181754
   # ./checkpoint/pretrained_snn_mlp_1
 
-acc_file_name:
-  'snn_mlp_acc.csv'
 

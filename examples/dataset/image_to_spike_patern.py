@@ -12,7 +12,6 @@ from PIL import Image
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-import utilities
 
 # %%
 np.random.seed(0)
@@ -62,7 +61,7 @@ for img in resized_image_list:
     binary_img_list.append(img)
 
 # %%
-#create a mask to dilate image. mask multiplies with image.
+#create a mask to sparsify image. mask multiplies with image.
 #config 1. good
 mask = np.zeros((hight,width))
 mask_pixel_row_interval = 5
@@ -149,14 +148,14 @@ elif mask_choice == 4:
 plt.imshow(mask)
 
 # %%
-dilated_img_list = []
+sparse_img_list = []
 for img in binary_img_list:
     img = img * mask
-    dilated_img_list.append(img)
+    sparse_img_list.append(img)
 
-plt.imshow(dilated_img_list[0])
+plt.imshow(sparse_img_list[0])
 
-dilated_img_mat = np.array(dilated_img_list).astype(np.float32)
+sparse_img_mat = np.array(sparse_img_list).astype(np.float32)
 
 if save:
-    np.save('associative_target', dilated_img_mat)
+    np.save('associative_target', sparse_img_mat)

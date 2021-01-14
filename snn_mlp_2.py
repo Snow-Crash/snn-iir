@@ -131,27 +131,18 @@ class mysnn(torch.nn.Module):
         :return:
         """
 
-        axon1_states = self.axon1.create_init_states()
-        snn1_states = self.snn1.create_init_states()
-
-        axon2_states = self.axon2.create_init_states()
-        snn2_states = self.snn2.create_init_states()
-
-        axon3_states = self.axon3.create_init_states()
-        snn3_states = self.snn3.create_init_states()
-
-        axon1_out, axon1_states = self.axon1(inputs, axon1_states)
-        spike_l1, snn1_states = self.snn1(axon1_out, snn1_states)
+        axon1_out, _ = self.axon1(inputs)
+        spike_l1, _ = self.snn1(axon1_out)
 
         drop_1 = self.dropout1(spike_l1)
 
-        axon2_out, axon2_states = self.axon2(drop_1, axon2_states)
-        spike_l2, snn2_states = self.snn2(axon2_out, snn2_states)
+        axon2_out, _ = self.axon2(drop_1)
+        spike_l2, _ = self.snn2(axon2_out)
 
         drop_2 = self.dropout2(spike_l2)
 
-        axon3_out, axon3_states = self.axon3(drop_2, axon3_states)
-        spike_l3, snn3_states = self.snn3(axon3_out, snn3_states)
+        axon3_out, _ = self.axon3(drop_2)
+        spike_l3, _ = self.snn3(axon3_out)
 
         return spike_l3
 

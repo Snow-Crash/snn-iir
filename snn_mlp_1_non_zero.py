@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
 """
-# File Name : snn_mlp_2.py
+# File Name : snn_mlp_1.py
 # Author: Haowen Fang
 # Email: hfang02@syr.edu
-# Description: multi-layer snn for MNIST classification. Use first order low pass psp kernel.
+# Description: multi-layer snn for MNIST classification. Use dual exponential psp kernel.
 """
 
 import argparse
@@ -30,6 +30,8 @@ import snn_lib.utilities
 import omegaconf
 from omegaconf import OmegaConf
 
+from pprint import pprint
+
 
 if torch.cuda.is_available():
     device = torch.device('cuda:0')
@@ -38,7 +40,7 @@ else:
 
 # arg parser
 parser = argparse.ArgumentParser(description='mlp snn')
-parser.add_argument('--config_file', type=str, default='snn_mlp_2.yaml',
+parser.add_argument('--config_file', type=str, default='snn_mlp_1.yaml',
                     help='path to configuration file')
 parser.add_argument('--train', action='store_true',
                     help='train model')
@@ -48,7 +50,7 @@ parser.add_argument('--test', action='store_true',
 
 args = parser.parse_args()
 
-# %% config file 
+# %% config file
 if args.config_file is None:
     print('No config file provided, use default config file')
 else:
@@ -71,8 +73,10 @@ test_checkpoint_path = conf['test_checkpoint_path']
 hyperparam_conf = conf['hyperparameters']
 length = hyperparam_conf['length']
 batch_size = hyperparam_conf['batch_size']
+synapse_type = hyperparam_conf['synapse_type']
 epoch = hyperparam_conf['epoch']
 tau_m = hyperparam_conf['tau_m']
+tau_s = hyperparam_conf['tau_s']
 filter_tau_m = hyperparam_conf['filter_tau_m']
 filter_tau_s = hyperparam_conf['filter_tau_s']
 
@@ -113,17 +117,25 @@ class mysnn(torch.nn.Module):
         self.train_bias = train_bias
         self.membrane_filter = membrane_filter
 
-        self.axon1 = first_order_low_pass_layer((784,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon1 = dual_exp_iir_layer((784,), self.length, self.batch_size, tau_m, tau_s, train_coefficients)
         self.snn1 = neuron_layer(784, 500, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter)
 
-        self.axon2 = first_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon2 = dual_exp_iir_layer((500,), self.length, self.batch_size, tau_m, tau_s, train_coefficients)
         self.snn2 = neuron_layer(500, 500, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter)
 
-        self.axon3 = first_order_low_pass_layer((500,), self.length, self.batch_size, tau_m, train_coefficients)
+        self.axon3 = dual_exp_iir_layer((500,), self.length, self.batch_size, tau_m, tau_s, train_coefficients)
         self.snn3 = neuron_layer(500, 10, self.length, self.batch_size, tau_m, self.train_bias, self.membrane_filter)
 
         self.dropout1 = torch.nn.Dropout(p=0.3, inplace=False)
         self.dropout2 = torch.nn.Dropout(p=0.3, inplace=False)
+
+        # holding the initial states
+        self.axon1_states = None
+        self.snn1_states = None
+        self.axon2_states = None
+        self.snn2_states = None
+        self.axon3_states = None
+        self.snn3_states = None
 
     def forward(self, inputs):
         """
@@ -131,32 +143,49 @@ class mysnn(torch.nn.Module):
         :return:
         """
 
-        axon1_states = self.axon1.create_init_states()
-        snn1_states = self.snn1.create_init_states()
+        # holding the initial states
+        if self.axon1_states is None:
+            self.axon1_states = self.axon1.create_init_states()
+        else:
+            self.axon1_states = (self.axon1_states[0].detach(), self.axon1_states[1].detach())
+        if self.snn1_states is None:
+            self.snn1_states = self.snn1.create_init_states()
+        else:
+            self.snn1_states = (self.snn1_states[0].detach(), self.snn1_states[1].detach())
+        if self.axon2_states is None:
+            self.axon2_states = self.axon2.create_init_states()
+        else:
+            self.axon2_states = (self.axon2_states[0].detach(), self.axon2_states[1].detach())
+        if self.snn2_states is None:
+            self.snn2_states = self.snn2.create_init_states()
+        else:
+            self.snn2_states = (self.snn2_states[0].detach(), self.snn2_states[1].detach())
+        if self.axon3_states is None:
+            self.axon3_states = self.axon3.create_init_states()
+        else:
+            self.axon3_states = (self.axon3_states[0].detach(), self.axon3_states[1].detach())
+        if self.snn3_states is None:
+            self.snn3_states = self.snn3.create_init_states()
+        else:
+            self.snn3_states = (self.snn3_states[0].detach(), self.snn3_states[1].detach())
 
-        axon2_states = self.axon2.create_init_states()
-        snn2_states = self.snn2.create_init_states()
-
-        axon3_states = self.axon3.create_init_states()
-        snn3_states = self.snn3.create_init_states()
-
-        axon1_out, axon1_states = self.axon1(inputs, axon1_states)
-        spike_l1, snn1_states = self.snn1(axon1_out, snn1_states)
+        axon1_out, self.axon1_states = self.axon1(inputs, self.axon1_states)
+        spike_l1, self.snn1_states = self.snn1(axon1_out, self.snn1_states)
 
         drop_1 = self.dropout1(spike_l1)
 
-        axon2_out, axon2_states = self.axon2(drop_1, axon2_states)
-        spike_l2, snn2_states = self.snn2(axon2_out, snn2_states)
+        axon2_out, self.axon2_states = self.axon2(drop_1, self.axon2_states)
+        spike_l2, self.snn2_states = self.snn2(axon2_out, self.snn2_states)
 
         drop_2 = self.dropout2(spike_l2)
 
-        axon3_out, axon3_states = self.axon3(drop_2, axon3_states)
-        spike_l3, snn3_states = self.snn3(axon3_out, snn3_states)
+        axon3_out, self.axon3_states = self.axon3(drop_2, self.axon3_states)
+        spike_l3, self.snn3_states = self.snn3(axon3_out, self.snn3_states)
 
         return spike_l3
 
 
-#train function
+########################### train function ###################################
 def train(model, optimizer, scheduler, train_data_loader, writer=None):
     eval_image_number = 0
     correct_total = 0
@@ -217,7 +246,7 @@ def test(model, test_data_loader, writer=None):
 
         x_test = sample_batched[0]
         target = sample_batched[1].to(device)
-        x_test = x_test.repeat(length, 1, 1).permute(1, 2, 0).to(device)
+        x_test = x_test.repeat(length, 1, 1).permute(1, 2, 0).to(device)    # [batch_size, h * w, length]
         out_spike = model(x_test)
 
         spike_count = torch.sum(out_spike, dim=2)
@@ -271,13 +300,13 @@ if __name__ == "__main__":
             snn.train()
             train_acc, train_loss = train(snn, optimizer, scheduler, train_dataloader, writer=None)
             train_acc_list.append(train_acc)
-            
+
             print('Train epoch: {}, acc: {}'.format(j, train_acc))
 
             # save every checkpoint
             if save_checkpoint == True:
                 checkpoint_name = checkpoint_base_name + experiment_name + '_' + str(j) + '_' + epoch_time_stamp
-                checkpoint_path = os.path.join(checkpoint_base_path, checkpoint_name) 
+                checkpoint_path = os.path.join(checkpoint_base_path, checkpoint_name)
                 checkpoint_list.append(checkpoint_path)
 
                 torch.save({

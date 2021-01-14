@@ -1,6 +1,6 @@
 
 experiment_name:
-  snn_mlp_1
+  snn_mlp_3
 
 pytorch_seed:
   2
@@ -11,26 +11,24 @@ hyperparameters:
     25
   batch_size:
     64
-  synapse_type:
-    'dual_exp'
   epoch:
     100
   droupout:
     0.3
   tau_m:
     4
-  tau_s:
-    1
   filter_tau_m:
     4
   filter_tau_s:
     1
   train_coefficients:
-    True
+    False
   train_bias:
     True
   membrane_filer:
     False
+  reset_v:
+    2.0
 
 optimizer:
   optimizer_choice:
@@ -97,8 +95,7 @@ checkpoint_base_path:
 
 # the checkpoint used for test
 test_checkpoint_path:
-  ./checkpoint/checkpoint_snn_mlp_1_99_20201028-181754
-  # ./checkpoint/pretrained_snn_mlp_1
+  ./checkpoint/pretrained_snn_mlp_3
 
 acc_file_name:
   'snn_mlp_acc.csv'

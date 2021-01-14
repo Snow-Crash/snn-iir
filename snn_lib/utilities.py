@@ -103,7 +103,7 @@ def mutate_spike_pattern(template_pattern, mean, sigma):
     create new spike pattern based on provided template, jitter follows normal distribution
     :param template_pattern: 2d array[input_dimension, time]
     :param mean: mean of normal distribution
-    :param sigma: stanndard deviation of normal distribution
+    :param sigma: standard deviation of normal distribution
     :return: 2d array [input_dimension, time]
     """
 
@@ -168,7 +168,7 @@ def gaussian_filter_spike_train(spike_train, sigma):
 def gaussian_filter_spike_train_batch(spike_train_batch, sigma):
     """
 
-    :param spike_trains: 3d array [patern_id, spike_train_id, time]
+    :param spike_trains: 3d array [pattern_id, spike_train_id, time]
     :param sigma:
     :return:
     """

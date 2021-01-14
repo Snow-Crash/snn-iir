@@ -68,7 +68,7 @@ class MNISTDataset(Dataset):
     torchvision_mnist: dataset object
     length: number of steps of snn
     max_rate: a scale factor. MNIST pixel value is normalized to [0,1], and them multiply with this value
-    faltten: return 28x28 image or a flattened 1d vector
+    flatten: return 28x28 image or a flattened 1d vector
     transform: transform
     """
 

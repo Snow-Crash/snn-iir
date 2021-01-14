@@ -39,7 +39,7 @@ else:
 # arg parser
 parser = argparse.ArgumentParser(description='mlp snn')
 parser.add_argument('--config_file', type=str, default='snn_mlp_1.yaml',
-                    help='path to cinfiguration file')
+                    help='path to configuration file')
 parser.add_argument('--train', action='store_true',
                     help='train model')
 
@@ -80,7 +80,7 @@ filter_tau_s = hyperparam_conf['filter_tau_s']
 
 membrane_filter = hyperparam_conf['membrane_filter']
 
-train_bias = hyperparam_conf['filter_tau_m']
+train_bias = hyperparam_conf['train_bias']
 train_coefficients = hyperparam_conf['train_coefficients']
 
 # %% mnist config

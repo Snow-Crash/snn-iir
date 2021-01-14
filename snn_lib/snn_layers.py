@@ -58,7 +58,7 @@ class threshold_layer(torch.nn.Module):
 
 class filter_layer(torch.nn.Module):
     '''
-    implement dual exponentual filter.
+    implement dual exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, filter_tau_m, filter_tau_s, device=None):
@@ -105,7 +105,7 @@ class filter_layer(torch.nn.Module):
 
 class exponential_filter_layer(torch.nn.Module):
     '''
-    implement exponential exponentual filter.
+    implement exponential exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, alpha, device):
@@ -141,9 +141,9 @@ class exponential_filter_layer(torch.nn.Module):
         return torch.stack(filter_output_list,dim=-1)
 
 
-class doouble_exponential_filter_layer(torch.nn.Module):
+class double_exponential_filter_layer(torch.nn.Module):
     '''
-    implement exponential exponentual filter.
+    implement exponential exponential filter.
     It is used to filter the output of last layer for temporal pattern training.
     '''
     def __init__(self, input_size, step_num, batch_size, alpha, beta, device):
@@ -335,7 +335,7 @@ class synapse_cell(torch.nn.Module):
     '''
     def __init__(self, input_size, output_size, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -446,7 +446,7 @@ class dual_exp_iir_cell(torch.nn.Module):
     '''
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_coefficients):
         '''
-        :param input_shape: tuple (width, hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width, hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -495,7 +495,7 @@ class dual_exp_iir_cell(torch.nn.Module):
 class dual_exp_iir_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -540,13 +540,13 @@ class dual_exp_iir_layer(torch.nn.Module):
 
         return init_states
 
-class firsr_order_low_pass_cell(torch.nn.Module):
+class first_order_low_pass_cell(torch.nn.Module):
     '''
     implement first order low pass filter
     '''
     def __init__(self, input_shape, step_num, batch_size, tau, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -578,10 +578,10 @@ class firsr_order_low_pass_cell(torch.nn.Module):
 
         return psp, new_states
 
-class firsr_order_low_pass_layer(torch.nn.Module):
+class first_order_low_pass_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau, train_coefficients):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -592,7 +592,7 @@ class firsr_order_low_pass_layer(torch.nn.Module):
         self.batch_size = batch_size
         self.tau = tau
 
-        self.firsr_order_low_pass_cell = firsr_order_low_pass_cell(input_shape, step_num, batch_size, tau,
+        self.first_order_low_pass_cell = first_order_low_pass_cell(input_shape, step_num, batch_size, tau,
                                                     train_coefficients)
 
     def forward(self, input_spikes, states):
@@ -608,12 +608,12 @@ class firsr_order_low_pass_layer(torch.nn.Module):
         length = len(inputs)
 
         for i in range(length):
-            spike, states = self.firsr_order_low_pass_cell(inputs[i], states)
+            spike, states = self.first_order_low_pass_cell(inputs[i], states)
             spikes += [spike]
         return torch.stack(spikes, dim=-1), states
 
     def create_init_states(self):
-        device = self.firsr_order_low_pass_cell.alpha_1.device
+        device = self.first_order_low_pass_cell.alpha_1.device
         prev_t_1 = torch.zeros(self.input_shape).to(device)
 
         init_states = prev_t_1
@@ -626,7 +626,7 @@ class axon_cell(torch.nn.Module):
     '''
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -678,7 +678,7 @@ class axon_layer(torch.nn.Module):
     def __init__(self, input_shape, step_num, batch_size, tau_m, tau_s, train_tau_m, train_tau_s):
         '''
 
-        :param input_shape: tuple (width hight) or (width, hight, depth) this shoule be the same as input shape,
+        :param input_shape: tuple (width hight) or (width, hight, depth) this should be the same as input shape,
         always on to one connection
         :param step_num:
         :param batch_size:
@@ -733,10 +733,9 @@ class axon_layer(torch.nn.Module):
 
 
 class neuron_cell(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
-                train_bias, membrane_filter, input_type='axon'):
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
+                train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
-
         :param input_size: int
         :param step_num:
         :param batch_size:
@@ -768,7 +767,7 @@ class neuron_cell(torch.nn.Module):
         self.reset_decay = torch.nn.Parameter(torch.full((self.neuron_number,),self.reset_decay))
         self.reset_decay.requires_grad = False
 
-        self.reset_v = torch.nn.Parameter(torch.full((self.neuron_number,), 1.0))
+        self.reset_v = torch.nn.Parameter(torch.full((self.neuron_number,), reset_v))
         self.reset_v.requires_grad = False
 
         self.decay_v = torch.exp(torch.tensor(-1/tau_m))
@@ -806,10 +805,9 @@ class neuron_cell(torch.nn.Module):
         return spike, new_states
 
 class neuron_layer(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
-    train_bias, membrane_filter, input_type='axon'):
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
+    train_bias, membrane_filter, input_type='axon', reset_v=1.0):
         '''
-
         :param input_size:
         :param neuron_number:
         :param step_num:
@@ -827,13 +825,13 @@ class neuron_layer(torch.nn.Module):
         self.membrane_filter = membrane_filter
         self.input_type = input_type
 
-        self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m, 
-                                        train_bias, membrane_filter, input_type)
+        self.neuron_cell = neuron_cell(input_size, neuron_number, step_num, batch_size, tau_m,
+                                        train_bias, membrane_filter, input_type, reset_v)
 
     def forward(self, input_spikes, states):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
-        :param  prev_states: tuple (prev_psp_m, prev_psp_s)
+        :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
 
@@ -863,7 +861,7 @@ class neuron_layer(torch.nn.Module):
             yield name, param
 
 class neuron_cell_dot_product(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
                 train_bias, membrane_filter, input_type='axon'):
         '''
         The the neuron performs dot product with input, not vector-matrix multiplication
@@ -940,7 +938,7 @@ class neuron_cell_dot_product(torch.nn.Module):
         return spike, new_states
 
 class neuron_layer_dot_product(torch.nn.Module):
-    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m, 
+    def __init__(self, input_size, neuron_number, step_num, batch_size, tau_m,
                 train_bias, membrane_filter, input_type='axon'):
         '''
 
@@ -961,14 +959,14 @@ class neuron_layer_dot_product(torch.nn.Module):
         self.membrane_filter = membrane_filter
         self.input_type = input_type
 
-        self.neuron_cell = neuron_cell_dot_product(input_size, neuron_number, step_num, batch_size, tau_m, 
+        self.neuron_cell = neuron_cell_dot_product(input_size, neuron_number, step_num, batch_size, tau_m,
                             train_bias, membrane_filter, input_type)
 
 
     def forward(self, input_spikes, states):
         """
         :param input_spikes: [batch, dim0 ,dim1..]
-        :param  prev_states: tuple (prev_psp_m, prev_psp_s)
+        :param  prev_states: tuple (prev_v, prev_reset)
         :return:
         """
 
@@ -1184,3 +1182,137 @@ def calculate_maxpooling2d_outsize(h_input, w_input, padding, kernel_size, strid
     w_output = (w_input + 2*padding - dilation*(kernel_size-1) - 1)//stride + 1
 
     return h_output, w_output
+
+
+class SNN_Monitor():
+    """
+    Record spikes and states
+    reference: https://www.kaggle.com/sironghuang/understanding-pytorch-hooks
+    """
+    def __init__(self, module, max_iteration = 1):
+
+        self.step_num = module.step_num
+        self.max_iteration = max_iteration
+
+        self.variable_dict = {}
+        self.record = {}
+
+        self.counter  = 0
+        self.max_len = max_iteration * self.step_num
+
+        if isinstance(module, dual_exp_iir_layer):
+            self.psp_list = []
+            self.hook = module.dual_exp_iir_cell.register_forward_hook(self.get_output_dual_exp_iir)
+
+            self.variable_dict['psp'] = self.psp_list
+
+        elif isinstance(module, first_order_low_pass_layer):
+            self.psp_list = []
+            self.hook = module.first_order_low_pass_cell.register_forward_hook(self.get_output_first_order_low_pass)
+
+            self.variable_dict['psp'] = self.psp_list
+
+        elif isinstance(module, neuron_layer):
+            self.hook = module.neuron_cell.register_forward_hook(self.get_output_neuron_layer)
+            self.v_list = []
+            self.reset_v_list = []
+            self.spike_list = []
+
+            self.variable_dict['v'] = self.v_list
+            self.variable_dict['reset_v'] = self.reset_v_list
+            self.variable_dict['spike'] = self.spike_list
+
+        elif isinstance(module, axon_layer):
+            self.hook =module.axon_cell.register_forward_hook(self.get_output_axon_layer)
+            self.psp_list = []
+
+            self.variable_dict['psp'] = self.psp_list
+
+    def get_output_dual_exp_iir(self, module, input, output):
+        '''
+
+        :param module:
+        :param input: a tuple [spike, new state[state(t-1), state(t-2)]]
+        :param output: a tuple [psp, new state[psp, state(t-1)]]
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_first_order_low_pass(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output:
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_neuron_layer(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output: [spike, [v, reset_v]]
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.spike_list.append(output[0])
+        self.v_list.append(output[1][0])
+        self.reset_v_list.append(output[1][1])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def get_output_axon_layer(self, module, input, output):
+        '''
+
+        :param module:
+        :param input:
+        :param output:
+        :return:
+        '''
+
+        self.counter += 1
+        if self.counter > self.max_len:
+            return
+
+        self.psp_list.append(output[0])
+
+        if self.counter == self.max_len:
+            self.reshape()
+
+    def reshape(self):
+
+        for key in self.variable_dict:
+            temp_list = []
+            for element in self.variable_dict[key]:
+                temp_list.append(element.detach().cpu().numpy())
+
+            # shape packed [total steps, batch, neuron/synapse]
+            packed = np.array(temp_list)
+
+            #shape packed [iterations,step num, batch, neuron/synapse]
+            packed = np.reshape(packed, (self.max_iteration, self.step_num, *packed.shape[1:]))
+
+            self.record[key] = packed
